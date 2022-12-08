@@ -44,15 +44,15 @@ namespace UnityEditor.PackageManager.DocumentationTools.UI
         }
 
         // Package documentation template building paths
-        internal static string PackageRoot {get { return Path.GetFullPath("packages/com.unity.package-manager-doctools"); }}
-        internal static string PackageUIDocumentationRoot {get { return Path.Combine(PackageRoot, ".docgen"); }}
+        internal static string PackageRoot { get { return Path.GetFullPath("packages/com.unity.package-manager-doctools"); } }
+        internal static string PackageUIDocumentationRoot { get { return Path.Combine(PackageRoot, ".docgen"); } }
         internal static string DocFxZip { get { return Path.Combine(PackageUIDocumentationRoot, "docfx-2.40.12.7z"); } }
         internal static string DocFxRoot { get { return Path.Combine(DocumentationBuildRoot, "docfx-2.40.12"); } }
-        internal static string DocFxExecutable {get { return Path.Combine(DocFxRoot, "docfx.exe"); }}
-        internal static string DocFxTemplateRoot {get { return Path.Combine(PackageUIDocumentationRoot, "docfx_packages"); }}
-        internal static string EditorMonoPath {get { return Path.Combine(EditorApplication.applicationContentsPath, "MonoBleedingEdge/bin/mono"); }}
+        internal static string DocFxExecutable { get { return Path.Combine(DocFxRoot, "docfx.exe"); } }
+        internal static string DocFxTemplateRoot { get { return Path.Combine(PackageUIDocumentationRoot, "docfx_packages"); } }
+        internal static string EditorMonoPath { get { return Path.Combine(EditorApplication.applicationContentsPath, "MonoBleedingEdge/bin/mono"); } }
         internal static string MonoZip { get { return Path.Combine(PackageUIDocumentationRoot, "mono-5.16.0.7z"); } }
-        internal static string MonoRootPath {get { return Path.Combine(DocumentationBuildRoot, "mono-5.16.0"); }}
+        internal static string MonoRootPath { get { return Path.Combine(DocumentationBuildRoot, "mono-5.16.0"); } }
         internal static string MonoPath { get; set; }
 
         internal static string WebPackageRoot = "http://docs.unity3d.com/Packages";
@@ -71,9 +71,9 @@ namespace UnityEditor.PackageManager.DocumentationTools.UI
             }
         }
 
-        internal static string UnityEditorDataPathRoot {get {return Path.GetFullPath(Path.Combine(PersistentDataPath, "../../unity"));}}
-        internal static string DocumentationRoot {get {return Path.Combine(UnityEditorDataPathRoot, "editor/documentation");}}
-        internal static string DocumentationSiteRoot {get { return Path.Combine(DocumentationRoot, "packages"); }}
+        internal static string UnityEditorDataPathRoot { get { return Path.GetFullPath(Path.Combine(PersistentDataPath, "../../unity")); } }
+        internal static string DocumentationRoot { get { return Path.Combine(UnityEditorDataPathRoot, "editor/documentation"); } }
+        internal static string DocumentationSiteRoot { get { return Path.Combine(DocumentationRoot, "packages"); } }
 
         internal static string DocumentationBuildRoot
         {
@@ -81,7 +81,7 @@ namespace UnityEditor.PackageManager.DocumentationTools.UI
             {
                 // Some packages have deep paths which end up exceeding windows' path name limit
                 if (Application.platform == RuntimePlatform.WindowsEditor)
-                    return "c:\\temp";
+                    return "c:\\temp\\unity-doctools";
 
                 return Path.Combine(DocumentationRoot, "build");
             }
@@ -102,7 +102,7 @@ namespace UnityEditor.PackageManager.DocumentationTools.UI
 
         bool serveCompleted;
         private Action serveCallback;
-        public event Action OnServing = delegate {};
+        public event Action OnServing = delegate { };
 
         private Thread serveThread;
         private Process serveProcess;
@@ -112,7 +112,7 @@ namespace UnityEditor.PackageManager.DocumentationTools.UI
         private string serveLog;
         private bool stopServeLogWatch;
 
-        internal DocumentationBuilder() {}
+        internal DocumentationBuilder() { }
 
         string GetPackageBuildFolder(string shortVersionId)
         {
@@ -183,7 +183,7 @@ namespace UnityEditor.PackageManager.DocumentationTools.UI
                 if (!serveMode)
                     docfxProcess.WaitForExit();
             }
-            catch (ThreadAbortException) {}    // Don't consider this an error.
+            catch (ThreadAbortException) { }    // Don't consider this an error.
             catch (Exception e)
             {
                 success = false;
@@ -283,7 +283,7 @@ namespace UnityEditor.PackageManager.DocumentationTools.UI
             EditorApplication.update -= ServeProgress;
 
             OnServing();
-            OnServing = delegate {};         // Clear all listeners so they don't alway get called back.
+            OnServing = delegate { };         // Clear all listeners so they don't alway get called back.
         }
 
         // Make sure the documentation is being served.
@@ -420,6 +420,12 @@ namespace UnityEditor.PackageManager.DocumentationTools.UI
                 packageDocs = packageDocsTilde;
             else if (Directory.Exists(packageDocsDot))
                 packageDocs = packageDocsDot;
+            else
+            {
+                // create doc folder  if not exists
+                Directory.CreateDirectory(packageDocsTilde);
+                packageDocs = packageDocsTilde;
+            }
 
             var sourceManualFiles = Directory.GetFiles(packageDocs, "*.md", SearchOption.AllDirectories);
 
@@ -879,7 +885,7 @@ namespace UnityEditor.PackageManager.DocumentationTools.UI
             return false;
         }
 
-        public virtual void BuildRedirectToLatestPage(string packageName , string latestShortVersionId, string absoluteLatestShortVersionId = "", string siteFolder = null)
+        public virtual void BuildRedirectToLatestPage(string packageName, string latestShortVersionId, string absoluteLatestShortVersionId = "", string siteFolder = null)
         {
             if (string.IsNullOrEmpty(siteFolder))
                 siteFolder = Path.Combine(DocumentationSiteRoot, string.Format("{0}@latest", packageName));

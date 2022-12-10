@@ -55,8 +55,8 @@ namespace UnityEditor.PackageManager.DocumentationTools.UI
         internal static string MonoRootPath { get { return Path.Combine(DocumentationBuildRoot, "mono-5.16.0"); } }
         internal static string MonoPath { get; set; }
 
-        internal static string WebPackageRoot = "http://docs.unity3d.com/Packages";
-        internal static string WebPackageRootRelative = "/Packages";
+        internal static string WebPackageRoot = "https://sarofc.github.io/docs";
+        internal static string WebPackageRootRelative = "/docs";
 
         // Documentation paths
         private static string _persistentDataPath;
